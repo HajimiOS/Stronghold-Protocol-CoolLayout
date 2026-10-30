@@ -1,6 +1,7 @@
 # Coollayout
 
-为[卫戍协议](https://github.com/sganggs/Stronghold-Protocol) 0.3.3 准备的页面布局调整。非官方同人模块。
+为[卫戍协议](https://github.com/sganggs/Stronghold-Protocol) 0.3.3 适配页面布局调整。非官方同人模块的同人模块。！
+适配[精英AI模组](https://github.com/HankDUMPLINGZhong/Stronghold-Protocol-AI)
 
 ## 开始使用
 
