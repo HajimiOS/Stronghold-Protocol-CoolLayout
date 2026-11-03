@@ -1,4 +1,4 @@
-# Coollayout
+# CoolLayout
 
 为[卫戍协议](https://github.com/sganggs/Stronghold-Protocol) 0.3.3 准备的页面布局调整。非官方同人模块。
 
@@ -19,7 +19,7 @@ Stronghold-Protocol/public/sp-plugins/coollayout/
 Stronghold-Protocol/public/index.html
 ```
 
-因需改宿主页面 DOM/CSS，不能只靠官方「界面插件」沙箱单独启用；脚本仍由服主注入。首次打开会默认在「设置 → 界面插件」里打开 `Coollayout`，之后可手动关闭。
+因需改宿主页面 DOM/CSS，不能只靠官方「界面插件」沙箱单独启用；脚本仍由服主注入。首次打开会默认在「设置 → 界面插件」里打开 `CoolLayout`，之后可手动关闭。
 
 ### Windows
 

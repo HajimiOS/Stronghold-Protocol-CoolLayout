@@ -1,4 +1,4 @@
-Coollayout
+CoolLayout
 
 本仓库是给卫戍协议（Stronghold Protocol）0.3.3 使用的页面布局模块。
 原项目：https://github.com/sganggs/Stronghold-Protocol

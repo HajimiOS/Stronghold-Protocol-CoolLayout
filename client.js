@@ -91,6 +91,8 @@
     "@media (max-height:520px){.rs-tools{display:flex}}",
     ".ping__value{font-variant-numeric:tabular-nums}",
     "@media (pointer:fine){.rs .rs-top{padding-bottom:.28rem}}",
+    ".ui-slot__frame[data-plugin=\"coollayout\"],.ui-slot__frame[data-plugin=\"spdj\"]{display:none!important}",
+    "[data-ui-slot=\"hud.right\"]{display:none!important}",
     ""
   ].join("");
 

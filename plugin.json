@@ -1,11 +1,11 @@
 {
   "manifest": 2,
-  "name": { "zh": "Coollayout", "en": "Coollayout" },
+  "name": { "zh": "CoolLayout", "en": "CoolLayout" },
   "description": {
-    "zh": "服主安装的布局增强。需宿主页面注入，不能用官方界面插件沙箱单独启用。",
-    "en": "Server-owner layout tweak. Needs host-page inject; not a sandboxed UI plugin."
+    "zh": "布局增强。服主注入宿主页面，不能只用官方界面插件沙箱启用。",
+    "en": "Layout tweaks. Needs host-page inject; not a sandboxed UI plugin alone."
   },
-  "version": "1.2.0",
+  "version": "1.3.3",
   "app": ">=0.3.3 <0.4.0",
   "api": 1,
   "class": "ui",
@@ -13,6 +13,5 @@
   "authors": ["HajimiOS"],
   "license": "GPL-3.0-or-later",
   "permissions": ["ui.frame"],
-  "entry": { "client": "frame/index.html" },
-  "slots": ["hud.right"]
+  "entry": { "client": "frame/index.html" }
 }
