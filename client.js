@@ -29,8 +29,11 @@
     ".sp-coarse .topbar__tools .btn--square.btn--sm,.sp-coarse .rs-tools>.btn--square,.sp-coarse .rs-tools>.fsbtn,.sp-coarse .topbar__tools>.coollayout-fs,.sp-coarse .rs-tools>.coollayout-fs{--sq:32px;width:32px;height:32px;min-width:32px;min-height:32px;flex:none;box-sizing:border-box}",
     ".sp-coarse .rs .rs-top{padding-bottom:max(14px,.32rem)}",
     ".bpop{overflow-x:hidden;overflow-y:auto}",
-    ".bpop__close{padding:0;line-height:0}",
-    ".bpop__close .icon{position:absolute;left:50%;top:50%;width:.18rem;height:.18rem;margin:0;transform:translate(-50%,-50%);display:block}",
+    "html .bpop__close,html .dpanel__close,html .edrawer__close,html .combat-metrics__close{display:inline-flex!important;align-items:center;justify-content:center;padding:0!important;margin:0;line-height:1;box-sizing:border-box;font-size:0}",
+    "html .bpop__close .icon,html .dpanel__close .icon,html .edrawer__close .icon,html .combat-metrics__close .icon,html .bpop__close svg,html .dpanel__close svg,html .edrawer__close svg,html .combat-metrics__close svg{display:block!important;margin:0!important;position:static!important;inset:auto!important;transform:none!important;flex:none;vertical-align:0;max-width:none}",
+    "html .bpop__close .icon,html .bpop__close svg{width:.18rem!important;height:.18rem!important}",
+    "html .dpanel__close .icon,html .dpanel__close svg{width:.2rem!important;height:.2rem!important}",
+    "html .edrawer__close .icon,html .edrawer__close svg{width:.18rem!important;height:.18rem!important}",
     ".bpop__facts{flex-wrap:wrap;min-width:0}",
     ".bpop__tiers{flex-wrap:wrap;min-width:0}",
     ".bpop__harmony{min-width:0;max-width:100%}",
@@ -124,7 +127,7 @@
   const anchors = [
     [".lobby-guide", "after"],
     [".stephead__guide", "after"],
-    [".st-top__right > :first-child", "before"],
+    ['[data-testid="stats-export"]', "before"],
     [".guide__close", "before"],
     [".modal__actions .set-guide", "before"]
   ];
@@ -140,7 +143,7 @@
   }
   function dock(btn, node, side) {
     const parent = node && node.parentElement;
-    if (!parent || node.offsetWidth < 1 || node.offsetHeight < 1) {
+    if (!parent || node === btn || node.classList?.contains("coollayout-fs") || node.offsetWidth < 1 || node.offsetHeight < 1) {
       btn.style.display = "none";
       return;
     }
