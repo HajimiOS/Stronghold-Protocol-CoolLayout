@@ -1,16 +1,16 @@
 # Coollayout
 
 为[卫戍协议](https://github.com/sganggs/Stronghold-Protocol) 0.3.3 准备的页面布局调整。非官方同人模块。
-适配[精英AI模组](https://github.com/HankDUMPLINGZhong/Stronghold-Protocol-AI)
 
 ## 开始使用
 
 只需服主安装。玩家打开原来的地址即可，电脑和手机不用另装软件。
 
-解压游戏后的文件夹叫 `Stronghold-Protocol`。模块文件放在：
+游戏目录是能看到 `public/index.html` 的那一层。安装后模块落到：
 
 ```
-Stronghold-Protocol/public/mods/Coollayout/client.js
+Stronghold-Protocol/plugins/coollayout/
+Stronghold-Protocol/public/sp-plugins/coollayout/
 ```
 
 安装程序还会改这一个文件：
@@ -19,43 +19,46 @@ Stronghold-Protocol/public/mods/Coollayout/client.js
 Stronghold-Protocol/public/index.html
 ```
 
+因需改宿主页面 DOM/CSS，不能只靠官方「界面插件」沙箱单独启用；脚本仍由服主注入。首次打开会默认在「设置 → 界面插件」里打开 `Coollayout`，之后可手动关闭。
+
 ### Windows
 
 1. 关闭游戏服务。
-2. 把本文件夹放到 `Stronghold-Protocol/Coollayout/`，双击 `Stronghold-Protocol/Coollayout/windows/install.bat`。
+2. 把本文件夹放到任意位置，双击 `windows/install.bat`，按提示选择游戏目录。
 3. 重新启动游戏，并刷新浏览器。
 
-更新本模块时再双击一次这个 bat。更新游戏前先双击 `Stronghold-Protocol/Coollayout/windows/uninstall.bat`，更新完成后再安装。
+更新本模块时再双击一次这个 bat。更新游戏本体前先双击 `windows/uninstall.bat`，更新完成后再安装。
 
 ### Linux
 
 1. 关闭游戏服务。
-2. 把本文件夹放到 `Stronghold-Protocol/Coollayout/`，然后执行：
+2. 执行（把路径换成实际游戏目录）：
 
 ```sh
-sh Stronghold-Protocol/Coollayout/linux/install.sh Stronghold-Protocol
+sh linux/install.sh /path/to/Stronghold-Protocol
 ```
 
 3. 重新启动游戏服务，并刷新浏览器。
 
-更新本模块时再执行一次上面的命令。更新游戏前先执行：
+更新本模块时再执行一次上面的命令。更新游戏本体前先卸载，更新完成后再安装：
 
 ```sh
-sh Stronghold-Protocol/Coollayout/linux/uninstall.sh Stronghold-Protocol
+sh linux/uninstall.sh /path/to/Stronghold-Protocol
 ```
 
-不能放进游戏的插件工作台。
+不能放进游戏的插件工作台来替代上述安装。
 
 ## 目录
 
 ```
-client.js
-mod.json
+plugin.json   官方插件清单（占位 frame）
+client.js     宿主注入脚本
+frame/        界面插件占位页
 README.md
 LICENSE
 NOTICE.md
-windows/     Windows 安装与卸载
-linux/       Linux 安装与卸载
+windows/      Windows 安装与卸载
+linux/        Linux 安装与卸载
 ```
 
 ## 功能
@@ -69,7 +72,6 @@ linux/       Linux 安装与卸载
 - 优化手机上方形按钮的大小
 - 优化空位、招募和羁绊信息的排版
 - 优化大厅铭牌的显示
-- 优化羁绊、详情、抽屉和作战统计关闭按钮的显示
 
 ## 兼容
 

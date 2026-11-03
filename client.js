@@ -1,4 +1,8 @@
 (() => {
+  const PLUGIN_ID = "coollayout";
+  const UI_KEY = "sp.pref.ui-plugins";
+  const SEED_KEY = "sp.pref.hajimi-ui-seeded";
+  const DEFAULT_IDS = ["coollayout", "spdj"];
   const SEL = [".hub-center__mark", ".hub-center__en", ".hub-center__title", ".hub-center__ver", ".mf-radar"];
   const EXPAND = "M3 3h7v2H5v5H3zm11 0h7v7h-2V5h-5zM3 14h2v5h5v2H3zm16 0h2v7h-7v-2h5z";
   const COLLAPSE = "M8 3h2v7H3V8h5zm6 0h2v5h5v2h-7zM3 14h7v7H8v-5H3zm11 0h7v2h-5v5h-2z";
@@ -10,6 +14,31 @@
     ja: ["全画面", "全画面を終了"],
     ko: ["전체 화면", "전체 화면 종료"]
   };
+  function seedUiDefaults() {
+    try {
+      if (localStorage.getItem(SEED_KEY)) return;
+      let ids = [];
+      const raw = localStorage.getItem(UI_KEY);
+      if (raw) {
+        try { ids = JSON.parse(raw); } catch {}
+        if (!Array.isArray(ids)) ids = [];
+      }
+      for (const id of DEFAULT_IDS) if (!ids.includes(id)) ids.push(id);
+      localStorage.setItem(UI_KEY, JSON.stringify(ids.sort()));
+      localStorage.setItem(SEED_KEY, "1");
+    } catch {}
+  }
+  seedUiDefaults();
+  function uiPluginOn() {
+    try {
+      const raw = localStorage.getItem(UI_KEY);
+      if (!raw) return false;
+      const v = JSON.parse(raw);
+      return Array.isArray(v) && v.includes(PLUGIN_ID);
+    } catch {
+      return false;
+    }
+  }
   const style = document.createElement("style");
   style.textContent = [
     "@media (max-height:520px){.hub-center__mark .hub-radar{display:block;width:2.6rem;height:2.6rem}}",
@@ -64,8 +93,9 @@
     "@media (pointer:fine){.rs .rs-top{padding-bottom:.28rem}}",
     ""
   ].join("");
-  document.documentElement.appendChild(style);
 
+  let alive = false;
+  let raf = 0;
   const el = document.documentElement;
   const fsOk = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled)
     && (typeof el.requestFullscreen === "function" || typeof el.webkitRequestFullscreen === "function");
@@ -162,7 +192,7 @@
     fitSquare(btn, node);
   }
   function syncButtons() {
-    if (!fsOk || syncing) return;
+    if (!alive || !fsOk || syncing) return;
     syncing = true;
     const screen = document.querySelector(".gload, .settle, .st--replay, .awayov");
     if (screen) {
@@ -189,7 +219,7 @@
   }
   document.addEventListener("fullscreenchange", syncButtons);
   document.addEventListener("webkitfullscreenchange", syncButtons);
-  new MutationObserver(() => syncButtons()).observe(document.body, { childList: true, subtree: true });
+  let mo = null;
 
   let tx = 0, ty = 0, cx = 0, cy = 0, on = false;
   const coarse = matchMedia("(pointer: coarse)").matches;
@@ -243,6 +273,7 @@
     }
   }
   function tick() {
+    if (!alive) return;
     syncSeats();
     syncButtons();
     lockPings();
@@ -254,13 +285,69 @@
       cx += (-tx * MAX - cx) * lerp;
       cy += (-ty * MAX - cy) * lerp;
       const v = "translate(" + cx.toFixed(2) + "px," + cy.toFixed(2) + "px)";
-      for (const el of list) el.style.transform = v;
+      for (const node of list) node.style.transform = v;
       const logo = document.querySelector(".hub-center__logo");
       if (logo) logo.style.transform = "";
       const bg = document.querySelector(".hub-bg");
       if (bg) bg.style.transform = "translate(" + (cx * 0.35).toFixed(2) + "px," + (cy * 0.35).toFixed(2) + "px) scale(1.03)";
     }
-    requestAnimationFrame(tick);
+    raf = requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+  function enable() {
+    if (alive) return;
+    alive = true;
+    if (!style.isConnected) document.documentElement.appendChild(style);
+    if (document.body && !mo) {
+      mo = new MutationObserver(() => syncButtons());
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function disable() {
+    if (!alive) return;
+    alive = false;
+    cancelAnimationFrame(raf);
+    raf = 0;
+    try { mo && mo.disconnect(); } catch {}
+    mo = null;
+    style.remove();
+    for (const btn of [screenBtn, ...slots].filter(Boolean)) {
+      btn.style.display = "none";
+      if (btn.parentElement !== document.body) document.body.appendChild(btn);
+    }
+    delete document.documentElement.dataset.rseat;
+    for (const node of nodes()) node.style.transform = "";
+    const bg = document.querySelector(".hub-bg");
+    if (bg) bg.style.transform = "";
+    cx = 0; cy = 0; on = false;
+  }
+  function syncPref() {
+    if (uiPluginOn()) enable();
+    else disable();
+  }
+  function watchPref() {
+    let cur = uiPluginOn();
+    const check = () => {
+      const next = uiPluginOn();
+      if (next === cur) return;
+      cur = next;
+      syncPref();
+    };
+    try {
+      const proto = Storage.prototype;
+      if (!proto.__spUiPluginHook) {
+        const raw = proto.setItem;
+        proto.setItem = function (k, v) {
+          raw.call(this, k, v);
+          if (k === "sp.pref.ui-plugins") check();
+        };
+        proto.__spUiPluginHook = 1;
+      }
+    } catch {}
+    window.addEventListener("storage", check);
+    setInterval(check, 800);
+  }
+  watchPref();
+  if (document.body) syncPref();
+  else document.addEventListener("DOMContentLoaded", syncPref, { once: true });
 })();
